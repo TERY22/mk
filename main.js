@@ -5,7 +5,7 @@ const player1 = {
    player: 1,
    name: 'Scorpion',
    hp: 100,
-   img: '',
+   img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
    weapon: ['Kunai', 'Long Sword', 'Ninja Sword', 'Mugai Ryu', 'Tanto'],
    attack: function() {
       console.log(`${this.name} fight...`);
@@ -16,7 +16,7 @@ const player2 = {
    player: 2,
    name: 'Sub-Zero',
    hp: 100,
-   img: '',
+   img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
    weapon: ['Ice Scepter', 'Kori Blade', 'Cybernetic Weapons', 'Ice Daggers', 'Ice Pollaxe'],
    attack: function() {
       console.log(`${this.name} fight...`);
