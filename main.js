@@ -5,7 +5,10 @@ const player1 = {
    player: 1,
    name: 'Scorpion',
    hp: 100,
-   img: '',
+   changeHP,
+   elHP,
+   renderHP,
+   img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
    weapon: ['Kunai', 'Long Sword', 'Ninja Sword', 'Mugai Ryu', 'Tanto'],
    attack: function() {
       console.log(`${this.name} fight...`);
@@ -16,10 +19,30 @@ const player2 = {
    player: 2,
    name: 'Sub-Zero',
    hp: 100,
-   img: '',
+   changeHP,
+   elHP,
+   renderHP,
+   img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
    weapon: ['Ice Scepter', 'Kori Blade', 'Cybernetic Weapons', 'Ice Daggers', 'Ice Pollaxe'],
    attack: function() {
       console.log(`${this.name} fight...`);
+   }
+}
+
+function elHP() {
+   return document.querySelector(`.player${this.player} .health`);
+}
+
+function renderHP() {
+   return this.elHP().style.width = this.hp + '%';
+}
+
+function changeHP(hpValue) {
+   
+   this.hp -= hpValue;
+
+   if (this.hp <= 0) {
+      this.hp = 0;
    }
 }
 
@@ -31,35 +54,60 @@ function createElement(tag, className) {
    return $tag;
 }
 
-function changeHP(player) {
-   const $playerHP = document.querySelector(`.player${player.player} .health`);
-
-   if (player.hp > 0) {
-      player.hp -= Math.ceil(Math.random() * 20);
-
-      $playerHP.style.width = player.hp + '%';
-
-      console.log(player.hp);
-   } else {   
-      $arenas.appendChild(showWinner(player.name));
-
-      $randomButton.disabled = true;
-
-      $playerHP.style.width = 0 + '%';
-   }
+function getRandom(num) {
+   return Math.ceil(Math.random() * num);
 }
-
-$randomButton.addEventListener('click', function() {
-     changeHP(player1);
-     changeHP(player2);
-});
 
 function showWinner(characterName) {
    const $winnerTitle = createElement('div', 'winnerTitle');
-   $winnerTitle.innerText = `${characterName} wins!`
+
+   if (characterName) {
+      $winnerTitle.innerText = `${characterName} wins!`
+   } else {
+      $winnerTitle.innerText = `Draw`
+   }
 
    return $winnerTitle;
 }
+
+function createReloadButton() {
+   const $reloadWrap = createElement('div', 'reloadWrap');
+   const $button = createElement('button', 'button');
+
+   $button.innerText = 'Restart';
+
+   $reloadWrap.appendChild($button);
+
+   return $reloadWrap;
+}
+
+$randomButton.addEventListener('click', function() {
+     player1.changeHP(getRandom(20));
+     player2.changeHP(getRandom(20));
+     player1.renderHP();
+     player2.renderHP();
+
+     if (player1.hp === 0 || player2.hp === 0) {
+         $randomButton.disabled = true;
+
+         const $reloadButton = createReloadButton();
+
+         $reloadButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            window.location.reload();
+         })
+
+         $arenas.appendChild($reloadButton);
+     }
+
+     if (player1.hp === 0 && player1.hp < player2.hp) {
+         $arenas.appendChild(showWinner(player2.name));
+     } else if (player1.hp === 0 && player2.hp === 0) {
+         $arenas.appendChild(showWinner());
+     } else if (player2.hp === 0 && player2.hp < player1.hp) {
+         $arenas.appendChild(showWinner(player1.name));
+     }
+});
 
 function createPlayer(playerObj) {
    const $player = createElement('div', `player${playerObj.player}`);
@@ -87,5 +135,3 @@ function createPlayer(playerObj) {
 
 $arenas.appendChild(createPlayer(player1));
 $arenas.appendChild(createPlayer(player2));
-
-
