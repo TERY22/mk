@@ -3,7 +3,7 @@ import { ATTACK, HIT } from './constants.js';
 
 const $formFight = document.querySelector('.control');
 
-function enemyAttack() {
+const enemyAttack = () => {
    const hit = ATTACK[getRandom(3) - 1];
    const defence = ATTACK[getRandom(3) - 1];
 
@@ -14,7 +14,7 @@ function enemyAttack() {
    }
 }
 
-function playerAttack() {
+const playerAttack = () => {
    const attack = {};
 
    for (let item of $formFight) {

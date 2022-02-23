@@ -1,4 +1,4 @@
-function getRandom(num) {
+const getRandom = (num) => {
    return Math.ceil(Math.random() * num);
 }
 

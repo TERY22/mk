@@ -4,7 +4,7 @@ import createElement from './createElement.js';
  * Create Reload Button
  * @returns HTMLElement
  */
-function createReloadButton() {
+const createReloadButton = () => {
    const $reloadWrap = createElement('div', 'reloadWrap');
    const $button = createElement('button', 'button');
 
@@ -13,7 +13,6 @@ function createReloadButton() {
    $reloadWrap.appendChild($button);
 
    $button.addEventListener('click', function (e) {
-      e.preventDefault();
       window.location.reload();
    })
 

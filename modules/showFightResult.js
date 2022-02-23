@@ -5,7 +5,7 @@ import showWinner from './showWinner.js';
 const $randomButton = document.querySelector('.button');
 const $arenas = document.querySelector('.arenas');
 
-function showFightResult() {
+const showFightResult = () => {
    if (player1.hp === 0 || player2.hp === 0) {
       $randomButton.disabled = true;
 

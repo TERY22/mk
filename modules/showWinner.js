@@ -5,7 +5,7 @@ import createElement from './createElement.js';
  * @param {string} characterName 
  * @returns {HTMLElement}
  */
-function showWinner(characterName) {
+const showWinner = (characterName) => {
    const $winnerTitle = createElement('div', 'winnerTitle');
 
    if (characterName) {

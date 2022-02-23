@@ -4,7 +4,7 @@
  * @param {string} className 
  * @returns {HTMLElement}
  */
-function createElement(tag, className) {
+const createElement = (tag, className) => {
    const $tag = document.createElement(tag);
 
    className ? $tag.classList.add(className) : undefined;
