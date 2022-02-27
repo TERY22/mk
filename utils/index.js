@@ -12,4 +12,8 @@ const createElement = (tag, className) => {
    return $tag;
 }
 
-export default createElement;
+const getRandom = (num) => {
+   return Math.ceil(Math.random() * num);
+}
+
+export {createElement, getRandom};

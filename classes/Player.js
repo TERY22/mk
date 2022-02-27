@@ -1,14 +1,18 @@
-import createElement from '../modules/createElement.js';
+import { createElement, getRandom } from '../utils/index.js';
 
 class Player {
-   constructor(props) {
-      this.name = props.name;
-      this.hp = props.hp;
-      this.img = props.img;
-      this.player = props.player;
+   constructor({player, name, hp, img, weapons}) {
+      this.player = player;
+      this.name = name;
+      this.hp = hp ? hp : 100;
+      this.img = img;
       this.selector = `player${this.player}`;
-      this.weapon = props.weapon;
-      this.rootSelector = props.rootSelector;
+      this.weapons = weapons;
+   }
+
+   doAttack = (hpValue) => {
+      this.changeHP(hpValue);
+      this.renderHP();
    }
 
    elHP = () => {
@@ -29,7 +33,7 @@ class Player {
    }
 
    createPlayer = () => {
-      const $root = document.querySelector(`.${this.rootSelector}`);
+      const $root = document.querySelector(`.arenas`);
       const $player = createElement('div', this.selector);
       const $progressbar = createElement('div', 'progressbar');
       const $character = createElement('div', 'character'); 
