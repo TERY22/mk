@@ -1,13 +1,12 @@
-import { createElement, getRandom } from '../utils/index.js';
+import { createElement } from '../utils/index.js';
 
 class Player {
-   constructor({player, name, hp, img, weapons}) {
+   constructor({player, name, hp, img}) {
       this.player = player;
       this.name = name;
       this.hp = hp ? hp : 100;
       this.img = img;
       this.selector = `player${this.player}`;
-      this.weapons = weapons;
    }
 
    doAttack = (hpValue) => {

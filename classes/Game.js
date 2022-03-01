@@ -3,6 +3,9 @@ import { ATTACK, HIT } from '../modules/constants.js';
 import Player from './Player.js';
 import Logs from './Logs.js';
 
+let player1;
+let player2;
+
 class Game {
    constructor({
       root, 
@@ -10,33 +13,46 @@ class Game {
    }) {
       this.root = root;
       this.form = root.querySelector('.control');
-
-      this.player1 = new Player({
-         player: 1,
-         name: 'Scorpion',
-         weapon: ['Kunai', 'Long Sword', 'Ninja Sword', 'Mugai Ryu', 'Tanto'],
-         img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-      });
-
-      this.player2 = new Player({
-         player: 2,
-         name: 'Sub-Zero',
-         weapon: ['Kunai', 'Long Sword', 'Ninja Sword', 'Mugai Ryu', 'Tanto'],
-         img: 'http://reactmarathon-api.herokuapp.com/assets/sub-zero.gif',
-      });
-
       this.logs = new Logs({chat,})
    }
 
-   start = () => {
-      this.root.appendChild(this.player1.createPlayer());
-      this.root.appendChild(this.player2.createPlayer());
+   start = async () => {
+      // this.root.appendChild(this.player1.createPlayer());
+      // this.root.appendChild(this.player2.createPlayer());
 
-      this.logs.generate(this.player1.name, this.player2.name);
+      // this.logs.generate(this.player1.name, this.player2.name);
       
       this.submitResult();
+
+      const players = await this.getPlayersFromApi();
+
+      let p1 = players[getRandom(players.length) - 1];
+      let p2 = players[getRandom(players.length) - 1];
+
+      player1 = new Player({
+         ...p1, 
+         player: 1,
+      });
+
+      player2 = new Player({
+         ...p2,
+         player: 2,
+      });
+
+      player1.createPlayer();
+      player2.createPlayer();
+
+      this.logs.generate(player1.name, player2.name);
+      this.sound()
    }
-   
+
+   getPlayersFromApi = async () => {
+      const body = await fetch('https://reactmarathon-api.herokuapp.com/api/mk/players')
+         .then(res => res.json());
+
+      return body;
+   }
+
    submitResult = () => {
       this.form.addEventListener('submit', (e) => {
          e.preventDefault();
@@ -50,28 +66,43 @@ class Game {
          this.getBattleLog(attackPlayer2, attackPlayer1);
 
          if (player.defence !== enemy.hit) {
-            this.player1.doAttack(attackPlayer2);
-            this.player2.doAttack(attackPlayer1);
+            player1.doAttack(attackPlayer2);
+            player2.doAttack(attackPlayer1);
          }
 
-         if (this.player1.hp === 0 || this.player2.hp === 0) {
+         if (player1.hp === 0 || player2.hp === 0) {
             this.showFightResult();
             this.createReloadButton();
+
+         }
+      })
+   }
+
+   sound = () => {
+      const control = document.querySelector('.audio-control')
+      const audio = document.querySelector('.audio')
+      control.addEventListener('click', () => {
+         if (audio.pause()) {
+            audio.play();
+            control.classList.remove('disabled');
+         } else {
+            audio.pause();
+            control.classList.add('disabled');
          }
       })
    }
 
    getBattleLog = (attackPlayer2, attackPlayer1) => {
       if (attackPlayer2) {
-         this.logs.hit(this.player2.name, this.player1.name, attackPlayer2, this.player1.hp);
+         this.logs.hit(player2.name, player1.name, attackPlayer2, player1.hp);
       } else {
-         this.logs.defence(this.player1.name, this.player2.name, 0, this.player1.hp);
+         this.logs.defence(player1.name, player2.name, 0, player1.hp);
       }
 
       if (attackPlayer1) {
-         this.logs.hit(this.player1.name, this.player2.name, attackPlayer1, this.player2.hp);
+         this.logs.hit(player1.name, player2.name, attackPlayer1, player2.hp);
       } else {
-         this.logs.defence(this.player2.name, this.player1.name, 0, this.player2.hp);
+         this.logs.defence(player2.name, player1.name, 0, player2.hp);
       }
    }
 
@@ -92,15 +123,15 @@ class Game {
    }
 
    showFightResult = () => {
-      if (this.player1.hp === 0 && this.player2.hp === 0) {
+      if (player1.hp === 0 && player2.hp === 0) {
          this.logs.draw();
          this.root.appendChild(this.showWinner());
-      } else if (this.player1.hp === 0) {
-         this.logs.end(this.player2.name, this.player1.name);
-         this.root.appendChild(this.showWinner(this.player2.name));
-      } else if (this.player2.hp === 0) {
-         this.logs.end(this.player1.name, this.player2.name);
-         this.root.appendChild(this.showWinner(this.player1.name));
+      } else if (player1.hp === 0) {
+         this.logs.end(player2.name, player1.name);
+         this.root.appendChild(this.showWinner(player2.name));
+      } else if (player2.hp === 0) {
+         this.logs.end(player1.name, player2.name);
+         this.root.appendChild(this.showWinner(player1.name));
       }
    }
 
