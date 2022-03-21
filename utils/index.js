@@ -4,7 +4,7 @@
  * @param {string} className 
  * @returns {HTMLElement}
  */
-function createElement(tag, className) {
+const createElement = (tag, className) => {
    const $tag = document.createElement(tag);
 
    className ? $tag.classList.add(className) : undefined;
@@ -12,4 +12,8 @@ function createElement(tag, className) {
    return $tag;
 }
 
-export default createElement;
+const getRandom = (num) => {
+   return Math.ceil(Math.random() * num);
+}
+
+export {createElement, getRandom};
